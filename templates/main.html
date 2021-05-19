@@ -39,7 +39,7 @@
        <br>
        <br>
             <form action="/main" method="POST" enctype="multipart/form-data">
-                <input class="custom-file-input" type="file" name="image" />
+                <input oninput= " filesize(this); " class="custom-file-input" type="file" name="image" />
                     <br>
                     <input type = "submit" value="Upload"/>
             </form>
@@ -68,5 +68,7 @@
 
 
 </div>
+
    </body>
 </html>
+

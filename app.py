@@ -83,7 +83,8 @@ def main(filename):
         #     bar_count += 1
         bar_heights = []
         for i in range(0, max_freq, freq_step):
-            x = np.mean(spectrogram[int(i*freq_index_ratio):int((i+freq_step)*freq_index_ratio), time_frame])
+            x = np.mean(spectrogram[int(i*freq_index_ratio)
+                        :int((i+freq_step)*freq_index_ratio), time_frame])
             bar_heights.append(bar_max_height*(80+x)/80)
         no_of_available_divisions = len(bar_heights)
         for each in bars:
@@ -150,6 +151,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.sqlite3'
 app.config['SECRET_KEY'] = "random string"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_VIDEO_EXTENSIONS'] = ["MP3", "WAV", "AAC", "FLAC"]
+app.config['MAX_IMAGE_FILESIZE'] = 5 * 1024 * 1024
 db = SQLAlchemy(app)
 
 # User Class
@@ -167,6 +169,13 @@ class usrInfo(db.Model):
         self.email = email
 
 # Routes
+
+
+def allowed_image_filesize(filesize):
+    if int(filesize) <= app.config['MAX_IMAGE_FILESIZE']:
+        return True
+    else:
+        return False
 
 
 def allowed_video(filename):
@@ -196,6 +205,13 @@ def mainpage():
                 print('no filename')
                 return redirect(request.url)
             else:
+                file.seek(0, 2)
+                file_length = file.tell()
+                print(int(file_length))
+                if not allowed_image_filesize(file_length):
+                    flash("Please put file less than 5MB")
+                    return redirect(request.url)
+
                 if not allowed_video(file.filename):
                     flash("This Video extension is not Allowed")
                     return redirect(request.url)
@@ -287,12 +303,14 @@ def login():
             return redirect(url_for('mainpage'))
     return render_template("login.html")
 
+
 @app.route("/adminclear")
 def adminclear():
     for f in os.listdir(UPLOAD_FOLDER):
         if f != "keep.txt":
             os.remove(os.path.join(UPLOAD_FOLDER, f))
     return redirect(url_for("mainpage"))
+
 
 @app.route('/delete/<int:id>')
 def delete(id):
