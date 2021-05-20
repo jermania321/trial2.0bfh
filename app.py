@@ -83,7 +83,7 @@ def main(filename):
         #     bar_count += 1
         bar_heights = []
         for i in range(0, max_freq, freq_step):
-            x = np.mean(spectrogram[int(i*freq_index_ratio)                        :int((i+freq_step)*freq_index_ratio), time_frame])
+            x = np.mean(spectrogram[int(i*freq_index_ratio):int((i+freq_step)*freq_index_ratio), time_frame])
             bar_heights.append(bar_max_height*(80+x)/80)
         no_of_available_divisions = len(bar_heights)
         for each in bars:
@@ -209,6 +209,7 @@ def mainpage():
                 if not allowed_image_filesize(file_length):
                     flash("Please put file less than 5MB")
                     return redirect(request.url)
+                file.seek(0)
 
                 if not allowed_video(file.filename):
                     flash("This Video extension is not Allowed")
