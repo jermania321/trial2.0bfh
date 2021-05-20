@@ -83,8 +83,7 @@ def main(filename):
         #     bar_count += 1
         bar_heights = []
         for i in range(0, max_freq, freq_step):
-            x = np.mean(spectrogram[int(i*freq_index_ratio)
-                        :int((i+freq_step)*freq_index_ratio), time_frame])
+            x = np.mean(spectrogram[int(i*freq_index_ratio)                        :int((i+freq_step)*freq_index_ratio), time_frame])
             bar_heights.append(bar_max_height*(80+x)/80)
         no_of_available_divisions = len(bar_heights)
         for each in bars:
@@ -151,7 +150,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.sqlite3'
 app.config['SECRET_KEY'] = "random string"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_VIDEO_EXTENSIONS'] = ["MP3", "WAV", "AAC", "FLAC"]
-app.config['MAX_IMAGE_FILESIZE'] = 5 * 1024 * 1024
+app.config['MAX_IMAGE_FILESIZE'] = 5 * 1024 * 1024  # 5mb
 db = SQLAlchemy(app)
 
 # User Class
@@ -207,7 +206,6 @@ def mainpage():
             else:
                 file.seek(0, 2)
                 file_length = file.tell()
-                print(int(file_length))
                 if not allowed_image_filesize(file_length):
                     flash("Please put file less than 5MB")
                     return redirect(request.url)
