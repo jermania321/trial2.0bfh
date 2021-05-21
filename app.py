@@ -220,7 +220,6 @@ def mainpage():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 print("saved file successfully")
                 session["filename"] = filename
-                threading.Thread(target=main(filename).start())
                 return redirect(url_for("convirting"))
 
     if "user" in session:
@@ -235,9 +234,10 @@ def mainpage():
 def convirting():
     if request.method == "POST":
         filename = session["filename"]
-        main(filename)
+        threading.Thread(target=main(filename).start())
         session["filename"] = f'{filename}_finished.mp4'
         os.remove(UPLOAD_FOLDER+filename)
+
         return redirect(url_for("download"))
     return render_template("convirting.html")
 
